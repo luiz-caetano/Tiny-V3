@@ -47,6 +47,12 @@
   <pre id="result"></pre>
 
   <script>
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    alert(code);
+
     document.getElementById('testBtn').onclick = async () => {
       const result = document.getElementById('result');
       result.textContent = 'Testando...';
