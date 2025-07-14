@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste de API a</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f8fa;
+      margin: 0;
+      padding: 40px;
+      color: #333;
+    }
+    h1 {
+      color: #0366d6;
+      margin-bottom: 24px;
+    }
+    button {
+      background: #2ea44f;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #22863a;
+    }
+    pre {
+      background: #fff;
+      border: 1px solid #d1d5da;
+      border-radius: 6px;
+      padding: 16px;
+      margin-top: 24px;
+      font-size: 15px;
+      max-width: 600px;
+      overflow-x: auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+  </style>
+</head>
+<body>
+  <h1>Testar API</h1>
+  <button id="testBtn">Testar</button>
+  <pre id="result"></pre>
+
+  <script>
+    document.getElementById('testBtn').onclick = async () => {
+      const result = document.getElementById('result');
+      result.textContent = 'Testando...';
+      try {
+        const response = await fetch('https://sua-api.com/endpoint'); // Troque pela URL da sua API
+        const data = await response.json();
+        result.textContent = 
+          `Status: ${response.status}\n` +
+          JSON.stringify(data, null, 2);
+      } catch (error) {
+        result.textContent = 'Erro: ' + error;
+      }
+    };
+  </script>
+</body>
+</html>
