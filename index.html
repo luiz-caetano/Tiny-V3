@@ -27,6 +27,7 @@
       font-size: 16px;
       cursor: pointer;
       transition: background 0.2s;
+      margin-right: 10px;
     }
 
     button:hover {
@@ -50,7 +51,7 @@
 <body>
   <h1>Testar API Tiny</h1>
   <button id="authBtn">Iniciar Login</button>
-  <button id="tokenBtn">token</button>
+  <button id="tokenBtn">Pegar Token</button>
 
   <pre id="result"></pre>
 
@@ -58,17 +59,19 @@
     const CLIENT_ID = "tiny-api-25f28f3ed79f02a4ddfa27c2d8a126443cf5995d-1752515544";
     const REDIRECT_URI = "https://tiny-v3.vercel.app/";
     const AUTH_URL = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth";
-    const SECRET = "DjPi6lCxzszUeXjAd34EK3dAuqTSct6k"
+    const SECRET = "DjPi6lCxzszUeXjAd34EK3dAuqTSct6k";
 
+    const result = document.getElementById('result');
+
+    // Botão para iniciar login
     document.getElementById('authBtn').onclick = () => {
       const url = `${AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=openid&response_type=code`;
       window.location.href = url;
     };
 
+    // Pegar o code da URL
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-
-    const result = document.getElementById('result');
 
     if (code) {
       console.log("Code recebido:", code);
@@ -77,20 +80,28 @@
       result.textContent = "Nenhum code na URL ainda.";
     }
 
+    // Botão para pegar token
+    document.getElementById('tokenBtn').addEventListener('click', async () => {
+      // Pega o code atual da URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
 
+      if (!code) {
+        alert("Nenhum code disponível. Faça o login primeiro!");
+        return;
+      }
 
-    document.getElementById('btnToken').addEventListener('click', async () => {
       const urlToken = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
 
       const data = new URLSearchParams();
       data.append('grant_type', 'authorization_code');
-      data.append('client_id', `${CLIENT_ID}`);
-      data.append('client_secret', `${SECRET}`);
-      data.append('redirect_uri', `${REDIRECT_URI}`);
-      data.append('code', `${code}`);
+      data.append('client_id', CLIENT_ID);
+      data.append('client_secret', SECRET);
+      data.append('redirect_uri', REDIRECT_URI);
+      data.append('code', code);
 
       try {
-        const response = await fetch(url, {
+        const response = await fetch(urlToken, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -98,17 +109,15 @@
           body: data.toString()
         });
 
-        const result = await response.json();
-        console.log('Token recebido:', result);
-
-        alert('Token recebido! Veja no console.');
+        const tokenResult = await response.json();
+        console.log('Token recebido:', tokenResult);
+        result.textContent = JSON.stringify(tokenResult, null, 2);
+        alert('Token recebido! Veja o console e a tela.');
       } catch (err) {
         console.error('Erro ao pegar token:', err);
         alert('Erro ao pegar token, veja o console.');
       }
-
     });
-
   </script>
 </body>
 
