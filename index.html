@@ -56,6 +56,7 @@
     const CLIENT_ID = "tiny-api-25f28f3ed79f02a4ddfa27c2d8a126443cf5995d-1752515544";
     const REDIRECT_URI = "https://tiny-v3.vercel.app/";
     const AUTH_URL = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth";
+    const SECRET = "DjPi6lCxzszUeXjAd34EK3dAuqTSct6k"
 
     document.getElementById('authBtn').onclick = () => {
       const url = `${AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=openid&response_type=code`;
@@ -74,6 +75,25 @@
       result.textContent = "Nenhum code na URL ainda.";
     }
 
+    const urlToken = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
+
+    const data = {
+      grant_type: 'authorization_code',
+      client_id: `${CLIENT_ID}`,
+      client_secret: `${SECRET}`,
+      redirect_uri: `${REDIRECT_URI}`,
+      code: `${code}`
+    };
+
+    const body = qs.stringify(data);
+
+    axios.post(url, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+      .then(response => console.log(response.data))
+      .catch(error => console.error('Erro:', error));
 
 
 
