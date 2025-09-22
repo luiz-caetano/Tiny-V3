@@ -79,7 +79,7 @@
 
 
 
-    document.getElementById('tokenBtn').onclick = () => {
+    document.getElementById('btnToken').addEventListener('click', async () => {
       const urlToken = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
 
       const data = new URLSearchParams();
@@ -106,6 +106,7 @@
         console.error('Erro ao pegar token:', err);
         alert('Erro ao pegar token, veja o console.');
       }
+
     });
 
   </script>
