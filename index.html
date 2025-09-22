@@ -3,75 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Teste de API Tiny</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f6f8fa;
-      margin: 0;
-      padding: 40px;
-      color: #333;
-    }
-    h1 {
-      color: #0366d6;
-      margin-bottom: 24px;
-    }
-    button {
-      background: #2ea44f;
-      color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    button:hover {
-      background: #22863a;
-    }
-    pre {
-      background: #fff;
-      border: 1px solid #d1d5da;
-      border-radius: 6px;
-      padding: 16px;
-      margin-top: 24px;
-      font-size: 15px;
-      max-width: 600px;
-      overflow-x: auto;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/css/index.css">
+  <script src="/assets/js/index.js"></script>
 </head>
 <body>
   <h1>Testar API Tiny</h1>
   <button id="authBtn">Iniciar Login</button>
   <pre id="result"></pre>
-
-  <script>
-    const CLIENT_ID = "tiny-api-25f28f3ed79f02a4ddfa27c2d8a126443cf5995d-1752515544";
-    const REDIRECT_URI = "https://tiny-v3.vercel.app/";
-    const AUTH_URL = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth";
-    const TOKEN_URL = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
-
-    document.getElementById('authBtn').onclick = () => {
-      const url = `${AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=openid&response_type=code`;
-      window.location.href = url;
-    };
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-
-    const result = document.getElementById('result');
-
-    if (code) {
-      console.log("Code recebido:", code);
-      result.textContent = "Code recebido via GET: " + code;
-    } else {
-      result.textContent = "Nenhum code na URL ainda.";
-    }
-
-
-
-    
-  </script>
 </body>
 </html>

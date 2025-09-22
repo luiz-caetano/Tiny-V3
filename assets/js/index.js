@@ -1,46 +1,24 @@
-import express from "express";
-import fetch from "node-fetch";
+import axios from "axios";
 
-const app = express();
 
-const CLIENT_ID = "CLIENT_ID";
-const CLIENT_SECRET = "CLIENT_SECRET";
-const REDIRECT_URI = "http://localhost:5500/callback";
 
-// 1. Rota para iniciar login
-app.get("/login", (req, res) => {
-  const authUrl = `https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=openid&response_type=code`;
-  res.redirect(authUrl);
-});
+const CLIENT_ID = "tiny-api-25f28f3ed79f02a4ddfa27c2d8a126443cf5995d-1752515544";
+const REDIRECT_URI = "https://tiny-v3.vercel.app/";
+const AUTH_URL = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/auth";
 
-// 2. Callback do Tiny com "code"
-app.get("/callback", async (req, res) => {
-  const code = req.query.code;
+document.getElementById('authBtn').onclick = () => {
+  const url = `${AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=openid&response_type=code`;
+  window.location.href = url;
+};
 
-  const tokenUrl = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
+const urlParams = new URLSearchParams(window.location.search);
+const code = urlParams.get('code');
 
-  const params = new URLSearchParams();
-  params.append("grant_type", "authorization_code");
-  params.append("client_id", CLIENT_ID);
-  params.append("client_secret", CLIENT_SECRET);
-  params.append("redirect_uri", REDIRECT_URI);
-  params.append("code", code);
+const result = document.getElementById('result');
 
-  try {
-    const response = await fetch(tokenUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: params
-    });
-
-    const data = await response.json();
-    console.log("Tokens recebidos:", data);
-
-    res.json(data);
-  } catch (err) {
-    console.error("Erro ao buscar token:", err);
-    res.status(500).send("Erro na autenticação");
-  }
-});
-
-app.listen(3000, () => console.log("App rodando em http://localhost:5500"));
+if (code) {
+  console.log("Code recebido:", code);
+  result.textContent = "Code recebido via GET: " + code;
+} else {
+  result.textContent = "Nenhum code na URL ainda.";
+}
