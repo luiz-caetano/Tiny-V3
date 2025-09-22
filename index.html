@@ -65,59 +65,35 @@
 
     // Botão para iniciar login
     document.getElementById('authBtn').onclick = () => {
-      const url = `${AUTH_URL}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=openid&response_type=code`;
-      window.location.href = url;
-    };
+      const express = require('express');
+      const fetch = require('node-fetch');
 
-    // Pegar o code da URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+      const app = express();
+      const port = 3000;
 
-    if (code) {
-      console.log("Code recebido:", code);
-      result.textContent = "Code recebido via GET: " + code;
-    } else {
-      result.textContent = "Nenhum code na URL ainda.";
+      app.get('/api/tiny', async (req, res) => {
+        try {
+          const response = await fetch('https://api.tiny.com.br/api/v3/produto', {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJnWXk2cDhkQkU0dDBkZkFvU0J4WkJvbDBkYmpTcEF5Z3FpQm1vY3pMcXJVIn0.eyJleHAiOjE3NTg1NzI3ODgsImlhdCI6MTc1ODU1ODM4OCwiYXV0aF90aW1lIjoxNzU4NTQ1Mzc3LCJqdGkiOiI3NDdhY2U0ZS0wN2NlLTRiNzctYTYwMy01NTNhMjM0OTE1OWIiLCJpc3MiOiJodHRwczovL2FjY291bnRzLnRpbnkuY29tLmJyL3JlYWxtcy90aW55IiwiYXVkIjoidGlueS1hcGkiLCJzdWIiOiJhMDAxNzMzZS03MDNhLTQwMTEtOTU4Yy01M2ViNTVjYjFlNzYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJ0aW55LWFwaS0yNWYyOGYzZWQ3OWYwMmE0ZGRmYTI3YzJkOGExMjY0NDNjZjU5OTVkLTE3NTI1MTU1NDQiLCJzZXNzaW9uX3N0YXRlIjoiNTJlMDM2ZDMtMTYyOS00OGZkLThmYzQtMDI1MzFhYzEzMmI3Iiwic2NvcGUiOiJvcGVuaWQgZW1haWwgb2ZmbGluZV9hY2Nlc3MiLCJzaWQiOiI1MmUwMzZkMy0xNjI5LTQ4ZmQtOGZjNC0wMjUzMWFjMTMyYjciLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsInJvbGVzIjp7InRpbnktYXBpIjpbIm1hcmNhcy1lc2NyaXRhIiwicGVkaWRvcy1sZWl0dXJhIiwiZXN0b3F1ZS1sZWl0dXJhIiwibm90YXMtZmlzY2Fpcy1lc2NyaXRhIiwiY29udGF0b3MtZXhjbHVzYW8iLCJpbmZvLWNvbnRhLWxlaXR1cmEiLCJwcm9kdXRvcy1leGNsdXNhbyIsImxpc3RhLXByZWNvcy1sZWl0dXJhIiwic2Vydmljb3MtZXNjcml0YSIsImNhdGVnb3JpYXMtbGVpdHVyYSIsImV4cGVkaWNhby1leGNsdXNhbyIsInNlcGFyYWNhby1sZWl0dXJhIiwiZm9ybWEtZW52aW8tbGVpdHVyYSIsInByb2R1dG9zLWxlaXR1cmEiLCJleHBlZGljYW8tbGVpdHVyYSIsIm9yZGVtLWNvbXByYS1sZWl0dXJhIiwiY29udGF0b3MtZXNjcml0YSIsIm5vdGFzLWZpc2NhaXMtbGVpdHVyYSIsInBlZGlkb3MtZXNjcml0YSIsImNvbnRhcy1wYWdhci1lc2NyaXRhIiwib3JkZW0tc2Vydmljby1sZWl0dXJhIiwiZXhwZWRpY2FvLWVzY3JpdGEiLCJjb250YXMtcGFnYXItbGVpdHVyYSIsImNvbnRhcy1yZWNlYmVyLWxlaXR1cmEiLCJzZXBhcmFjYW8tZXNjcml0YSIsIm1hcmNhcy1sZWl0dXJhIiwiaW50ZXJtZWRpYWRvcmVzLWxlaXR1cmEiLCJmb3JtYS1wYWdhbWVudG8tbGVpdHVyYSIsImdhdGlsaG9zIiwiZXN0b3F1ZS1lc2NyaXRhIiwicHJvZHV0b3MtZXNjcml0YSIsIm9yZGVtLXNlcnZpY28tZXNjcml0YSIsImNvbnRhcy1yZWNlYmVyLWVzY3JpdGEiLCJzZXJ2aWNvcy1sZWl0dXJhIiwicGVkaWRvcy1leGNsdXNhbyIsImNvbnRhdG9zLWxlaXR1cmEiLCJvcmRlbS1jb21wcmEtZXNjcml0YSIsIm5vdGFzLWZpc2NhaXMtZXhjbHVzYW8iXX0sImVtYWlsIjoibHVpemNhZXRhbm9AY2FzYXZldC5jb20uYnIifQ.PwEs8RzW8ccA-y3UURpn-PP-D_3qfJHZ5Ha4KVBDNiwMYmSWdztTVYhNwztKG-pzJ_ZkQ10FIwl1kdJzgIB9rRxLa3F8fB-HCYfZnIPmDgbZ1_xITCLEehYpQ_n4oE_Z5mTBWcWeN0BpsfXJBVZDOP9XQ3Pb1XVXlb5ObMrrxBHp_WTMYJIXFqy_fl4cixdqJ_LEUKQcK0gvh39BLUJYwh60SMlPcCQ6vKHbLjrBr9Bj9B62GdXc0CRQRrWekfxLvMiXr2mGYxHSk3N-y6M1wR4FvHIP7Fq12ReMEdy__zNwGEMpcrwiIyuUEsx4Uti-dprnsYd6R2FNdvq9gcS7jw","expires_in":14400,"refresh_expires_in":86400,"refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI5MDNkY2IxNi0xNTgwLTQ0NzYtYWY0Mi1lYTFkN2YyNzY4MjcifQ.eyJleHAiOjE3NTg2NDQ3ODgsImlhdCI6MTc1ODU1ODM4OCwianRpIjoiNGNjMjU0MTAtYzI1OS00ODYzLWEwNGYtYWIxMDUzZGFiYzViIiwiaXNzIjoiaHR0cHM6Ly9hY2NvdW50cy50aW55LmNvbS5ici9yZWFsbXMvdGlueSIsImF1ZCI6Imh0dHBzOi8vYWNjb3VudHMudGlueS5jb20uYnIvcmVhbG1zL3RpbnkiLCJzdWIiOiJhMDAxNzMzZS03MDNhLTQwMTEtOTU4Yy01M2ViNTVjYjFlNzYiLCJ0eXAiOiJPZmZsaW5lIiwiYXpwIjoidGlueS1hcGktMjVmMjhmM2VkNzlmMDJhNGRkZmEyN2MyZDhhMTI2NDQzY2Y1OTk1ZC0xNzUyNTE1NTQ0Iiwic2Vzc2lvbl9zdGF0ZSI6IjUyZTAzNmQzLTE2MjktNDhmZC04ZmM0LTAyNTMxYWMxMzJiNyIsInNjb3BlIjoib3BlbmlkIGVtYWlsIG9mZmxpbmVfYWNjZXNzIiwic2lkIjoiNTJlMDM2ZDMtMTYyOS00OGZkLThmYzQtMDI1MzFhYzEzMmI3In0.4r1GQwn6vPh5q0XMsblqfm9eLXEnxNe4nZigFZvRA04","token_type":"Bearer","id_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJnWXk2cDhkQkU0dDBkZkFvU0J4WkJvbDBkYmpTcEF5Z3FpQm1vY3pMcXJVIn0.eyJleHAiOjE3NTg1NzI3ODgsImlhdCI6MTc1ODU1ODM4OCwiYXV0aF90aW1lIjoxNzU4NTQ1Mzc3LCJqdGkiOiI3YTc1NWFjMy1jMDIxLTQzZTUtODlmMi1jMThkNjQzMGU0MWMiLCJpc3MiOiJodHRwczovL2FjY291bnRzLnRpbnkuY29tLmJyL3JlYWxtcy90aW55IiwiYXVkIjoidGlueS1hcGktMjVmMjhmM2VkNzlmMDJhNGRkZmEyN2MyZDhhMTI2NDQzY2Y1OTk1ZC0xNzUyNTE1NTQ0Iiwic3ViIjoiYTAwMTczM2UtNzAzYS00MDExLTk1OGMtNTNlYjU1Y2IxZTc2IiwidHlwIjoiSUQiLCJhenAiOiJ0aW55LWFwaS0yNWYyOGYzZWQ3OWYwMmE0ZGRmYTI3YzJkOGExMjY0NDNjZjU5OTVkLTE3NTI1MTU1NDQiLCJzZXNzaW9uX3N0YXRlIjoiNTJlMDM2ZDMtMTYyOS00OGZkLThmYzQtMDI1MzFhYzEzMmI3IiwiYXRfaGFzaCI6IjF2NXJmX3V2Z1diZm1WVmZGVkJ1MnciLCJzaWQiOiI1MmUwMzZkMy0xNjI5LTQ4ZmQtOGZjNC0wMjUzMWFjMTMyYjciLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImVtYWlsIjoibHVpemNhZXRhbm9AY2FzYXZldC5jb20uYnIifQ.C5zcL1tuz7ucw9Aa8J7RTipD1g1IJDffVrOxcUEuWnDiOrqk1ueOFvm71vd8ZoUUV6VqjNJ1viRWScuVkw9944OSDVH7X3Rtm30umokVjVGw2C3M3X6Svf5fUJCiuYZ8FNTbX8MKMyQt13W6ATER0e3Xy_mGzApOXAcMQpLvkqY-nx0tXA_E5og2tp2ranIf-O2PoA-tY3KuQ9JFPCihKzU_QYyT-vWe27Hp2DMTSDp5KbtP0umpJz-KO4CBHxJnfciDcP997YrL66j6UjMVlgZ1lMbgmLQcUHd3yTC_mnSNwlA5ezirXPCkjNtw1DTrroRn74Z2rjL0OC8jgg-9qw',
+              'Content-Type': 'application/json'
+            }
+          });
+
+          const data = await response.json();
+
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.json(data);
+        } catch (error) {
+          res.status(500).json({ error: 'Erro ao acessar a API do Tiny ERP' });
+        }
+      });
+
+      app.listen(port, () => {
+        console.log(`Servidor rodando em http://localhost:${port}`);
+      });
     }
-
-    // Botão para pegar token
-    document.getElementById('tokenBtn').addEventListener('click', async () => {
-      // Pega o code atual da URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-
-      if (!code) {
-        alert("Nenhum code disponível. Faça o login primeiro!");
-        return;
-      }
-
-      const urlToken = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
-
-      const data = new URLSearchParams();
-      data.append('grant_type', 'authorization_code');
-      data.append('client_id', CLIENT_ID);
-      data.append('client_secret', SECRET);
-      data.append('redirect_uri', REDIRECT_URI);
-      data.append('code', code);
-
-      try {
-        const response = await fetch(urlToken, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: data.toString()
-        });
-
-        const tokenResult = await response.json();
-        console.log('Token recebido:', tokenResult);
-        result.textContent = JSON.stringify(tokenResult, null, 2);
-        alert('Token recebido! Veja o console e a tela.');
-      } catch (err) {
-        console.error('Erro ao pegar token:', err);
-        alert('Erro ao pegar token, veja o console.');
-      }
-    });
   </script>
 </body>
 
