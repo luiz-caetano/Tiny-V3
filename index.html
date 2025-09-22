@@ -50,6 +50,8 @@
 <body>
   <h1>Testar API Tiny</h1>
   <button id="authBtn">Iniciar Login</button>
+  <button id="tokenBtn">token</button>
+
   <pre id="result"></pre>
 
   <script>
@@ -75,27 +77,36 @@
       result.textContent = "Nenhum code na URL ainda.";
     }
 
-    const urlToken = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
 
-    const data = {
-      grant_type: 'authorization_code',
-      client_id: `${CLIENT_ID}`,
-      client_secret: `${SECRET}`,
-      redirect_uri: `${REDIRECT_URI}`,
-      code: `${code}`
-    };
 
-    const body = qs.stringify(data);
+    document.getElementById('tokenBtn').onclick = () => {
+      const urlToken = "https://accounts.tiny.com.br/realms/tiny/protocol/openid-connect/token";
 
-    axios.post(url, body, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+      const data = new URLSearchParams();
+      data.append('grant_type', 'authorization_code');
+      data.append('client_id', `${CLIENT_ID}`);
+      data.append('client_secret', `${SECRET}`);
+      data.append('redirect_uri', `${REDIRECT_URI}`);
+      data.append('code', `${code}`);
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: data.toString()
+        });
+
+        const result = await response.json();
+        console.log('Token recebido:', result);
+
+        alert('Token recebido! Veja no console.');
+      } catch (err) {
+        console.error('Erro ao pegar token:', err);
+        alert('Erro ao pegar token, veja o console.');
       }
-    })
-      .then(response => console.log(response.data))
-      .catch(error => console.error('Erro:', error));
-
-
+    });
 
   </script>
 </body>
